@@ -3,7 +3,7 @@
   "name": "All Pokemon Catchable 251",
   "version": "1.0.0",
   "api": 2,
-  "entry": "mod.lua",
+  "entry": "main.lua",
   "profile": "content",
   "category": "CONTENT",
   "games": ["crystal"],
