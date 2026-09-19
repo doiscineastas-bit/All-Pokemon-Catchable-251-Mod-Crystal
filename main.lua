@@ -5,16 +5,16 @@ return function(mod)
     -- 1. STONE EVOLUTIONS
     ---------------------------------------------------------
     -- Replaces trade evolutions with evolutionary stones
-    mod.content.pokemon:patch("HAUNTER",   { evolutions = { { method = "ITEM", item = "MOON_STONE",    species = "GENGAR" } } })
-    mod.content.pokemon:patch("KADABRA",   { evolutions = { { method = "ITEM", item = "MOON_STONE",    species = "ALAKAZAM" } } })
-    mod.content.pokemon:patch("MACHOKE",   { evolutions = { { method = "ITEM", item = "SUN_STONE",     species = "MACHAMP" } } })
-    mod.content.pokemon:patch("GRAVELER",  { evolutions = { { method = "ITEM", item = "SUN_STONE",     species = "GOLEM" } } })
-    mod.content.pokemon:patch("POLIWHIRL", { evolutions = { { method = "ITEM", item = "MOON_STONE",    species = "POLITOED" } } })
-    mod.content.pokemon:patch("SLOWPOKE",  { evolutions = { { method = "ITEM", item = "WATER_STONE",   species = "SLOWKING" } } })
-    mod.content.pokemon:patch("ONIX",      { evolutions = { { method = "ITEM", item = "SUN_STONE",     species = "STEELIX" } } })
-    mod.content.pokemon:patch("SCYTHER",   { evolutions = { { method = "ITEM", item = "LEAF_STONE",    species = "SCIZOR" } } })
-    mod.content.pokemon:patch("SEADRA",    { evolutions = { { method = "ITEM", item = "WATER_STONE",   species = "KINGDRA" } } })
-    mod.content.pokemon:patch("PORYGON",   { evolutions = { { method = "ITEM", item = "THUNDERSTONE",  species = "PORYGON2" } } })
+    mod.content.pokemon:patch("HAUNTER",   { evolutions = { { method = "ITEM", item = "MOON_STONE",    into = "GENGAR" } } })
+    mod.content.pokemon:patch("KADABRA",   { evolutions = { { method = "ITEM", item = "MOON_STONE",    into = "ALAKAZAM" } } })
+    mod.content.pokemon:patch("MACHOKE",   { evolutions = { { method = "ITEM", item = "SUN_STONE",     into = "MACHAMP" } } })
+    mod.content.pokemon:patch("GRAVELER",  { evolutions = { { method = "ITEM", item = "SUN_STONE",     into = "GOLEM" } } })
+    mod.content.pokemon:patch("POLIWHIRL", { evolutions = { { method = "ITEM", item = "MOON_STONE",    into = "POLITOED" } } })
+    mod.content.pokemon:patch("SLOWPOKE",  { evolutions = { { method = "ITEM", item = "WATER_STONE",   into = "SLOWKING" } } })
+    mod.content.pokemon:patch("ONIX",      { evolutions = { { method = "ITEM", item = "SUN_STONE",     into = "STEELIX" } } })
+    mod.content.pokemon:patch("SCYTHER",   { evolutions = { { method = "ITEM", item = "LEAF_STONE",    into = "SCIZOR" } } })
+    mod.content.pokemon:patch("SEADRA",    { evolutions = { { method = "ITEM", item = "WATER_STONE",   into = "KINGDRA" } } })
+    mod.content.pokemon:patch("PORYGON",   { evolutions = { { method = "ITEM", item = "THUNDERSTONE",  into = "PORYGON2" } } })
 
     ---------------------------------------------------------
     -- 2. GRASS & CAVE ENCOUNTERS (WALKING)
