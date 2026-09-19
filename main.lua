@@ -1,166 +1,438 @@
-local Crystal251 = {}
-
-function Crystal251.OnInit()
-    print("Starting Mod: All Pokemon Catchable 251...")
+return function(mod)
+    mod.log:info("Loading All Pokemon Catchable 251 for Crystal...")
 
     ---------------------------------------------------------
     -- 1. STONE EVOLUTIONS
     ---------------------------------------------------------
     -- Replaces trade evolutions with evolutionary stones
-    local new_evolutions = {
-        ["HAUNTER"]   = { method = "ITEM", item = "MOON_STONE",  target = "GENGAR" },
-        ["MACHOKE"]   = { method = "ITEM", item = "SUN_STONE",   target = "MACHAMP" },
-        ["GRAVELER"]  = { method = "ITEM", item = "SUN_STONE",   target = "GOLEM" },
-        ["KADABRA"]   = { method = "ITEM", item = "MOON_STONE",  target = "ALAKAZAM" },
-        ["SEADRA"]    = { method = "ITEM", item = "WATER_STONE", target = "KINGDRA" },
-        ["ONIX"]      = { method = "ITEM", item = "SUN_STONE",   target = "STEELIX" },
-        ["SCYTHER"]   = { method = "ITEM", item = "LEAF_STONE",  target = "SCIZOR" },
-        ["SLOWPOKE"]  = { method = "ITEM", item = "WATER_STONE", target = "SLOWKING" },
-        ["POLIWHIRL"] = { method = "ITEM", item = "MOON_STONE",  target = "POLITOED" },
-        ["PORYGON"]   = { method = "ITEM", item = "THUNDERSTONE",target = "PORYGON2" }
-    }
-
-    Mod.hook("GetEvoData", function(species, original_evos)
-        if new_evolutions[species] then 
-            return { new_evolutions[species] } 
-        end
-        return original_evos
-    end)
+    mod.content.pokemon:patch("HAUNTER",   { evolutions = { { method = "ITEM", item = "MOON_STONE",    species = "GENGAR" } } })
+    mod.content.pokemon:patch("KADABRA",   { evolutions = { { method = "ITEM", item = "MOON_STONE",    species = "ALAKAZAM" } } })
+    mod.content.pokemon:patch("MACHOKE",   { evolutions = { { method = "ITEM", item = "SUN_STONE",     species = "MACHAMP" } } })
+    mod.content.pokemon:patch("GRAVELER",  { evolutions = { { method = "ITEM", item = "SUN_STONE",     species = "GOLEM" } } })
+    mod.content.pokemon:patch("POLIWHIRL", { evolutions = { { method = "ITEM", item = "MOON_STONE",    species = "POLITOED" } } })
+    mod.content.pokemon:patch("SLOWPOKE",  { evolutions = { { method = "ITEM", item = "WATER_STONE",   species = "SLOWKING" } } })
+    mod.content.pokemon:patch("ONIX",      { evolutions = { { method = "ITEM", item = "SUN_STONE",     species = "STEELIX" } } })
+    mod.content.pokemon:patch("SCYTHER",   { evolutions = { { method = "ITEM", item = "LEAF_STONE",    species = "SCIZOR" } } })
+    mod.content.pokemon:patch("SEADRA",    { evolutions = { { method = "ITEM", item = "WATER_STONE",   species = "KINGDRA" } } })
+    mod.content.pokemon:patch("PORYGON",   { evolutions = { { method = "ITEM", item = "THUNDERSTONE",  species = "PORYGON2" } } })
 
     ---------------------------------------------------------
     -- 2. GRASS & CAVE ENCOUNTERS (WALKING)
     ---------------------------------------------------------
-    -- Each time of day must have exactly 7 slots: 30%, 30%, 20%, 10%, 5%, 4%, 1%
-    local grass_encounters = {
-        ["ROUTE_31"] = {
-            -- Chikorita 10% (Morn)
-            MORN = { { chance = 30, species = "LEDYBA" }, { chance = 30, species = "CATERPIE" }, { chance = 20, species = "BELLSPROUT" }, { chance = 10, species = "CHIKORITA" }, { chance = 5, species = "PIDGEY" }, { chance = 4, species = "HOPPIP" }, { chance = 1, species = "RATTATA" } }
-        },
-        ["ROUTE_32"] = {
-            -- Mareep 30% (Morn/Day), Totodile 20% (Day)
-            MORN = { { chance = 30, species = "MAREEP" }, { chance = 30, species = "EKANS" }, { chance = 20, species = "BELLSPROUT" }, { chance = 10, species = "HOPPIP" }, { chance = 5, species = "ZUBAT" }, { chance = 4, species = "RATTATA" }, { chance = 1, species = "ZUBAT" } },
-            DAY = { { chance = 30, species = "MAREEP" }, { chance = 30, species = "EKANS" }, { chance = 20, species = "TOTODILE" }, { chance = 10, species = "HOPPIP" }, { chance = 5, species = "ZUBAT" }, { chance = 4, species = "RATTATA" }, { chance = 1, species = "ZUBAT" } }
-        },
-        ["ROUTE_36"] = {
-            -- Vulpix 30% (Morn/Day), Houndour 30% (Nite)
-            MORN = { { chance = 30, species = "VULPIX" }, { chance = 30, species = "LEDYBA" }, { chance = 20, species = "BELLSPROUT" }, { chance = 10, species = "GROWLITHE" }, { chance = 5, species = "PIDGEY" }, { chance = 4, species = "STANTLER" }, { chance = 1, species = "RATTATA" } },
-            DAY = { { chance = 30, species = "VULPIX" }, { chance = 30, species = "PIDGEY" }, { chance = 20, species = "BELLSPROUT" }, { chance = 10, species = "GROWLITHE" }, { chance = 5, species = "PIDGEY" }, { chance = 4, species = "STANTLER" }, { chance = 1, species = "RATTATA" } },
-            NITE = { { chance = 30, species = "HOUNDOUR" }, { chance = 30, species = "HOOTHOOT" }, { chance = 20, species = "BELLSPROUT" }, { chance = 10, species = "GROWLITHE" }, { chance = 5, species = "HOOTHOOT" }, { chance = 4, species = "STANTLER" }, { chance = 1, species = "RATTATA" } }
-        },
-        ["ROUTE_37"] = {
-            -- Vulpix 30% (Morn/Day), Houndour 30% (Nite)
-            MORN = { { chance = 30, species = "VULPIX" }, { chance = 30, species = "LEDYBA" }, { chance = 20, species = "GROWLITHE" }, { chance = 10, species = "PIDGEY" }, { chance = 5, species = "PIDGEOTTO" }, { chance = 4, species = "GROWLITHE" }, { chance = 1, species = "LEDYBA" } },
-            DAY = { { chance = 30, species = "VULPIX" }, { chance = 30, species = "PIDGEY" }, { chance = 20, species = "GROWLITHE" }, { chance = 10, species = "PIDGEY" }, { chance = 5, species = "PIDGEOTTO" }, { chance = 4, species = "GROWLITHE" }, { chance = 1, species = "PIDGEY" } },
-            NITE = { { chance = 30, species = "HOUNDOUR" }, { chance = 30, species = "SPINARAK" }, { chance = 20, species = "STANTLER" }, { chance = 10, species = "HOOTHOOT" }, { chance = 5, species = "NOCTOWL" }, { chance = 4, species = "STANTLER" }, { chance = 1, species = "SPINARAK" } }
-        },
-        ["ROUTE_38"] = {
-            -- Murkrow 30% (Nite)
-            NITE = { { chance = 30, species = "MURKROW" }, { chance = 30, species = "MEOWTH" }, { chance = 20, species = "MAGNEMITE" }, { chance = 10, species = "RATTATA" }, { chance = 5, species = "RATICATE" }, { chance = 4, species = "MEOWTH" }, { chance = 1, species = "MAGNEMITE" } }
-        },
-        ["ROUTE_42"] = {
-            -- Mankey 30% (Morn/Day)
-            MORN = { { chance = 30, species = "MANKEY" }, { chance = 30, species = "EKANS" }, { chance = 20, species = "SPEAROW" }, { chance = 10, species = "ARBOK" }, { chance = 5, species = "FEAROW" }, { chance = 4, species = "ARBOK" }, { chance = 1, species = "GOLBAT" } },
-            DAY = { { chance = 30, species = "MANKEY" }, { chance = 30, species = "EKANS" }, { chance = 20, species = "SPEAROW" }, { chance = 10, species = "ARBOK" }, { chance = 5, species = "FEAROW" }, { chance = 4, species = "ARBOK" }, { chance = 1, species = "GOLBAT" } }
-        },
-        ["ROUTE_9"] = {
-            -- Mankey 30% (Morn/Day)
-            MORN = { { chance = 30, species = "MANKEY" }, { chance = 30, species = "RATTATA" }, { chance = 20, species = "SPEAROW" }, { chance = 10, species = "RATICATE" }, { chance = 5, species = "FEAROW" }, { chance = 4, species = "MAROWAK" }, { chance = 1, species = "RATICATE" } },
-            DAY = { { chance = 30, species = "MANKEY" }, { chance = 30, species = "RATTATA" }, { chance = 20, species = "SPEAROW" }, { chance = 10, species = "RATICATE" }, { chance = 5, species = "FEAROW" }, { chance = 4, species = "MAROWAK" }, { chance = 1, species = "RATICATE" } }
-        },
-        ["ROUTE_43"] = {
-            -- Girafarig 30% (All times)
-            MORN = { { chance = 30, species = "GIRAFARIG" }, { chance = 30, species = "PIDGEOTTO" }, { chance = 20, species = "FLAAFFY" }, { chance = 10, species = "FARFETCH_D" }, { chance = 5, species = "FLAAFFY" }, { chance = 4, species = "PIDGEOTTO" }, { chance = 1, species = "PIDGEOTTO" } },
-            DAY = { { chance = 30, species = "GIRAFARIG" }, { chance = 30, species = "PIDGEOTTO" }, { chance = 20, species = "FLAAFFY" }, { chance = 10, species = "FARFETCH_D" }, { chance = 5, species = "FLAAFFY" }, { chance = 4, species = "PIDGEOTTO" }, { chance = 1, species = "PIDGEOTTO" } },
-            NITE = { { chance = 30, species = "GIRAFARIG" }, { chance = 30, species = "VENONAT" }, { chance = 20, species = "NOCTOWL" }, { chance = 10, species = "FLAAFFY" }, { chance = 5, species = "VENOMOTH" }, { chance = 4, species = "NOCTOWL" }, { chance = 1, species = "VENOMOTH" } }
-        },
-        ["DARK_CAVE_VIOLET_ENTRANCE"] = {
-            -- Cyndaquil 40% (Nite) -> 30% + 10% slots
-            NITE = { { chance = 30, species = "CYNDAQUIL" }, { chance = 30, species = "GEODUDE" }, { chance = 20, species = "ZUBAT" }, { chance = 10, species = "CYNDAQUIL" }, { chance = 5, species = "GEODUDE" }, { chance = 4, species = "ZUBAT" }, { chance = 1, species = "DUNSPARCE" } }
-        },
-        ["ILEX_FOREST"] = {
-            -- Bulbasaur 5% (Morn)
-            MORN = { { chance = 30, species = "CATERPIE" }, { chance = 30, species = "WEEDLE" }, { chance = 20, species = "METAPOD" }, { chance = 10, species = "KAKUNA" }, { chance = 5, species = "BULBASAUR" }, { chance = 4, species = "PIDGEY" }, { chance = 1, species = "ZUBAT" } }
-        },
-        ["BURNED_TOWER_B1F"] = {
-            -- Slugma 30% (Day), Charmander 10% (Nite)
-            DAY = { { chance = 30, species = "SLUGMA" }, { chance = 30, species = "KOFFING" }, { chance = 20, species = "KOFFING" }, { chance = 10, species = "ZUBAT" }, { chance = 5, species = "ZUBAT" }, { chance = 4, species = "RATTATA" }, { chance = 1, species = "RATICATE" } },
-            NITE = { { chance = 30, species = "KOFFING" }, { chance = 30, species = "KOFFING" }, { chance = 20, species = "ZUBAT" }, { chance = 10, species = "CHARMANDER" }, { chance = 5, species = "ZUBAT" }, { chance = 4, species = "RATTATA" }, { chance = 1, species = "RATICATE" } }
-        },
-        ["TIN_TOWER_2F"] = {
-            -- Natu 30% (Day), Xatu 20% (Day/Nite)
-            DAY = { { chance = 30, species = "RATTATA" }, { chance = 30, species = "NATU" }, { chance = 20, species = "XATU" }, { chance = 10, species = "RATTATA" }, { chance = 5, species = "RATICATE" }, { chance = 4, species = "RATICATE" }, { chance = 1, species = "RATICATE" } },
-            NITE = { { chance = 30, species = "GASTLY" }, { chance = 30, species = "RATTATA" }, { chance = 20, species = "XATU" }, { chance = 10, species = "GASTLY" }, { chance = 5, species = "RATICATE" }, { chance = 4, species = "RATICATE" }, { chance = 1, species = "RATICATE" } }
-        },
-        ["UNION_CAVE_B1F"] = {
-            -- Squirtle 10% (Morn/Day) on land
-            MORN = { { chance = 30, species = "ZUBAT" }, { chance = 30, species = "GOLBAT" }, { chance = 20, species = "ZUBAT" }, { chance = 10, species = "SQUIRTLE" }, { chance = 5, species = "GEODUDE" }, { chance = 4, species = "ONIX" }, { chance = 1, species = "ONIX" } },
-            DAY = { { chance = 30, species = "ZUBAT" }, { chance = 30, species = "GOLBAT" }, { chance = 20, species = "ZUBAT" }, { chance = 10, species = "SQUIRTLE" }, { chance = 5, species = "GEODUDE" }, { chance = 4, species = "ONIX" }, { chance = 1, species = "ONIX" } }
-        },
-        ["WHIRL_ISLAND_LUGIA_CHAMBER"] = {
-            -- Omanyte 5% (Morn/Day), Kabuto 10% (Nite)
-            MORN = { { chance = 30, species = "KRABBY" }, { chance = 30, species = "ZUBAT" }, { chance = 20, species = "KINGLER" }, { chance = 10, species = "GOLBAT" }, { chance = 5, species = "OMANYTE" }, { chance = 4, species = "GOLBAT" }, { chance = 1, species = "SEEL" } },
-            DAY = { { chance = 30, species = "KRABBY" }, { chance = 30, species = "ZUBAT" }, { chance = 20, species = "KINGLER" }, { chance = 10, species = "GOLBAT" }, { chance = 5, species = "OMANYTE" }, { chance = 4, species = "GOLBAT" }, { chance = 1, species = "SEEL" } },
-            NITE = { { chance = 30, species = "KRABBY" }, { chance = 30, species = "ZUBAT" }, { chance = 20, species = "KINGLER" }, { chance = 10, species = "KABUTO" }, { chance = 5, species = "SEEL" }, { chance = 4, species = "GOLBAT" }, { chance = 1, species = "SEEL" } }
-        },
-        
-        -- ==========================================
-        -- SECRET LOCATIONS (1% Encounters)
-        -- ==========================================
-        ["ROUTE_10_NORTH"] = {
-            -- Zapdos 1% (Day) outside Power Plant
-            DAY = { { chance = 30, species = "VOLTORB" }, { chance = 30, species = "MAGNEMITE" }, { chance = 20, species = "RATICATE" }, { chance = 10, species = "MAGNETON" }, { chance = 5, species = "ELECTABUZZ" }, { chance = 4, species = "ELECTABUZZ" }, { chance = 1, species = "ZAPDOS" } }
-        },
-        ["SILVER_CAVE_ROOM_2"] = {
-            -- Moltres 1% (Morn)
-            MORN = { { chance = 30, species = "GOLBAT" }, { chance = 30, species = "MACHOKE" }, { chance = 20, species = "URSARING" }, { chance = 10, species = "PARASECT" }, { chance = 5, species = "PARASECT" }, { chance = 4, species = "MISDREAVUS" }, { chance = 1, species = "MOLTRES" } }
-        },
-        ["ICE_PATH_B3F"] = {
-            -- Articuno 1% (Nite)
-            NITE = { { chance = 30, species = "ZUBAT" }, { chance = 30, species = "JYNX" }, { chance = 20, species = "GOLBAT" }, { chance = 10, species = "SWINUB" }, { chance = 5, species = "DELIBIRD" }, { chance = 4, species = "SNEASEL" }, { chance = 1, species = "ARTICUNO" } }
-        },
-        ["SEAFOAM_GYM"] = {
-            -- Mewtwo 1% (Nite) hiding with Blaine
-            NITE = { { chance = 30, species = "ZUBAT" }, { chance = 30, species = "GOLBAT" }, { chance = 20, species = "KRABBY" }, { chance = 10, species = "KINGLER" }, { chance = 5,  species = "GOLDUCK" }, { chance = 4,  species = "GOLBAT" }, { chance = 1,  species = "MEWTWO" } }
-        },
-        ["SILVER_CAVE_ROOM_3"] = {
-            -- Mew 1% (Morn) at the summit with Red
-            MORN = { { chance = 30, species = "GOLBAT" }, { chance = 30, species = "ONIX" }, { chance = 20, species = "GRAVELER" }, { chance = 10, species = "URSARING" }, { chance = 5, species = "DONPHAN" }, { chance = 4, species = "LARVITAR" }, { chance = 1, species = "MEW" } }
+    -- Gen 2 uses exactly 7 slots per time of day (30%, 30%, 20%, 10%, 5%, 4%, 1%)
+    
+    mod.content.encounters:patch("ROUTE_31", {
+        grass = {
+            morn = {
+                { level = 4, species = "LEDYBA" },     -- 30%
+                { level = 4, species = "CATERPIE" },   -- 30%
+                { level = 5, species = "BELLSPROUT" }, -- 20%
+                { level = 5, species = "CHIKORITA" },  -- 10%
+                { level = 4, species = "PIDGEY" },     -- 5%
+                { level = 4, species = "HOPPIP" },     -- 4%
+                { level = 5, species = "RATTATA" }     -- 1%
+            }
         }
-    }
+    })
 
-    Mod.hook("GetGrassEncounters", function(map_id, time_of_day, original_table)
-        if grass_encounters[map_id] and grass_encounters[map_id][time_of_day] then
-            return grass_encounters[map_id][time_of_day]
-        end
-        return original_table
-    end)
+    mod.content.encounters:patch("ROUTE_32", {
+        grass = {
+            morn = {
+                { level = 6, species = "MAREEP" },     -- 30%
+                { level = 6, species = "EKANS" },      -- 30%
+                { level = 6, species = "BELLSPROUT" }, -- 20%
+                { level = 6, species = "HOPPIP" },     -- 10%
+                { level = 5, species = "ZUBAT" },      -- 5%
+                { level = 5, species = "RATTATA" },    -- 4%
+                { level = 6, species = "ZUBAT" }       -- 1%
+            },
+            day = {
+                { level = 6, species = "MAREEP" },     -- 30%
+                { level = 6, species = "EKANS" },      -- 30%
+                { level = 5, species = "TOTODILE" },   -- 20%
+                { level = 6, species = "HOPPIP" },     -- 10%
+                { level = 5, species = "ZUBAT" },      -- 5%
+                { level = 5, species = "RATTATA" },    -- 4%
+                { level = 6, species = "ZUBAT" }       -- 1%
+            }
+        }
+    })
+
+    mod.content.encounters:patch("ROUTE_36", {
+        grass = {
+            morn = {
+                { level = 13, species = "VULPIX" },    -- 30%
+                { level = 13, species = "LEDYBA" },    -- 30%
+                { level = 14, species = "BELLSPROUT" },-- 20%
+                { level = 13, species = "GROWLITHE" }, -- 10%
+                { level = 14, species = "PIDGEY" },    -- 5%
+                { level = 14, species = "STANTLER" },  -- 4%
+                { level = 13, species = "RATTATA" }    -- 1%
+            },
+            day = {
+                { level = 13, species = "VULPIX" },    -- 30%
+                { level = 13, species = "PIDGEY" },    -- 30%
+                { level = 14, species = "BELLSPROUT" },-- 20%
+                { level = 13, species = "GROWLITHE" }, -- 10%
+                { level = 14, species = "PIDGEY" },    -- 5%
+                { level = 14, species = "STANTLER" },  -- 4%
+                { level = 13, species = "RATTATA" }    -- 1%
+            },
+            nite = {
+                { level = 13, species = "HOUNDOUR" },  -- 30%
+                { level = 13, species = "HOOTHOOT" },  -- 30%
+                { level = 14, species = "BELLSPROUT" },-- 20%
+                { level = 13, species = "GROWLITHE" }, -- 10%
+                { level = 14, species = "HOOTHOOT" },  -- 5%
+                { level = 14, species = "STANTLER" },  -- 4%
+                { level = 13, species = "RATTATA" }    -- 1%
+            }
+        }
+    })
+
+    mod.content.encounters:patch("ROUTE_37", {
+        grass = {
+            morn = {
+                { level = 15, species = "VULPIX" },    -- 30%
+                { level = 15, species = "LEDYBA" },    -- 30%
+                { level = 16, species = "GROWLITHE" }, -- 20%
+                { level = 15, species = "PIDGEY" },    -- 10%
+                { level = 16, species = "PIDGEOTTO" }, -- 5%
+                { level = 16, species = "GROWLITHE" }, -- 4%
+                { level = 15, species = "LEDYBA" }     -- 1%
+            },
+            day = {
+                { level = 15, species = "VULPIX" },    -- 30%
+                { level = 15, species = "PIDGEY" },    -- 30%
+                { level = 16, species = "GROWLITHE" }, -- 20%
+                { level = 15, species = "PIDGEY" },    -- 10%
+                { level = 16, species = "PIDGEOTTO" }, -- 5%
+                { level = 16, species = "GROWLITHE" }, -- 4%
+                { level = 15, species = "PIDGEY" }     -- 1%
+            },
+            nite = {
+                { level = 15, species = "HOUNDOUR" },  -- 30%
+                { level = 15, species = "SPINARAK" },  -- 30%
+                { level = 16, species = "STANTLER" },  -- 20%
+                { level = 15, species = "HOOTHOOT" },  -- 10%
+                { level = 16, species = "NOCTOWL" },   -- 5%
+                { level = 16, species = "STANTLER" },  -- 4%
+                { level = 15, species = "SPINARAK" }   -- 1%
+            }
+        }
+    })
+
+    mod.content.encounters:patch("ROUTE_38", {
+        grass = {
+            nite = {
+                { level = 16, species = "MURKROW" },   -- 30%
+                { level = 16, species = "MEOWTH" },    -- 30%
+                { level = 17, species = "MAGNEMITE" }, -- 20%
+                { level = 16, species = "RATTATA" },   -- 10%
+                { level = 17, species = "RATICATE" },  -- 5%
+                { level = 17, species = "MEOWTH" },    -- 4%
+                { level = 16, species = "MAGNEMITE" }  -- 1%
+            }
+        }
+    })
+
+    mod.content.encounters:patch("ROUTE_42", {
+        grass = {
+            morn = {
+                { level = 15, species = "MANKEY" },    -- 30%
+                { level = 15, species = "EKANS" },     -- 30%
+                { level = 16, species = "SPEAROW" },   -- 20%
+                { level = 15, species = "ARBOK" },     -- 10%
+                { level = 16, species = "FEAROW" },    -- 5%
+                { level = 16, species = "ARBOK" },     -- 4%
+                { level = 15, species = "GOLBAT" }     -- 1%
+            },
+            day = {
+                { level = 15, species = "MANKEY" },    -- 30%
+                { level = 15, species = "EKANS" },     -- 30%
+                { level = 16, species = "SPEAROW" },   -- 20%
+                { level = 15, species = "ARBOK" },     -- 10%
+                { level = 16, species = "FEAROW" },    -- 5%
+                { level = 16, species = "ARBOK" },     -- 4%
+                { level = 15, species = "GOLBAT" }     -- 1%
+            }
+        }
+    })
+
+    mod.content.encounters:patch("ROUTE_9", {
+        grass = {
+            morn = {
+                { level = 15, species = "MANKEY" },    -- 30%
+                { level = 15, species = "RATTATA" },   -- 30%
+                { level = 16, species = "SPEAROW" },   -- 20%
+                { level = 15, species = "RATICATE" },  -- 10%
+                { level = 16, species = "FEAROW" },    -- 5%
+                { level = 16, species = "MAROWAK" },   -- 4%
+                { level = 15, species = "RATICATE" }   -- 1%
+            },
+            day = {
+                { level = 15, species = "MANKEY" },    -- 30%
+                { level = 15, species = "RATTATA" },   -- 30%
+                { level = 16, species = "SPEAROW" },   -- 20%
+                { level = 15, species = "RATICATE" },  -- 10%
+                { level = 16, species = "FEAROW" },    -- 5%
+                { level = 16, species = "MAROWAK" },   -- 4%
+                { level = 15, species = "RATICATE" }   -- 1%
+            }
+        }
+    })
+
+    mod.content.encounters:patch("ROUTE_43", {
+        grass = {
+            morn = {
+                { level = 15, species = "GIRAFARIG" }, -- 30%
+                { level = 15, species = "PIDGEOTTO" }, -- 30%
+                { level = 16, species = "FLAAFFY" },   -- 20%
+                { level = 15, species = "FARFETCH_D" },-- 10%
+                { level = 16, species = "FLAAFFY" },   -- 5%
+                { level = 16, species = "PIDGEOTTO" }, -- 4%
+                { level = 15, species = "PIDGEOTTO" }  -- 1%
+            },
+            day = {
+                { level = 15, species = "GIRAFARIG" }, -- 30%
+                { level = 15, species = "PIDGEOTTO" }, -- 30%
+                { level = 16, species = "FLAAFFY" },   -- 20%
+                { level = 15, species = "FARFETCH_D" },-- 10%
+                { level = 16, species = "FLAAFFY" },   -- 5%
+                { level = 16, species = "PIDGEOTTO" }, -- 4%
+                { level = 15, species = "PIDGEOTTO" }  -- 1%
+            },
+            nite = {
+                { level = 15, species = "GIRAFARIG" }, -- 30%
+                { level = 15, species = "VENONAT" },   -- 30%
+                { level = 16, species = "NOCTOWL" },   -- 20%
+                { level = 15, species = "FLAAFFY" },   -- 10%
+                { level = 16, species = "VENOMOTH" },  -- 5%
+                { level = 16, species = "NOCTOWL" },   -- 4%
+                { level = 15, species = "VENOMOTH" }   -- 1%
+            }
+        }
+    })
+
+    mod.content.encounters:patch("DARK_CAVE_VIOLET_ENTRANCE", {
+        grass = {
+            nite = {
+                { level = 4, species = "CYNDAQUIL" },  -- 30%
+                { level = 4, species = "GEODUDE" },    -- 30%
+                { level = 5, species = "ZUBAT" },      -- 20%
+                { level = 4, species = "CYNDAQUIL" },  -- 10% (Makes 40% total)
+                { level = 5, species = "GEODUDE" },    -- 5%
+                { level = 5, species = "ZUBAT" },      -- 4%
+                { level = 4, species = "DUNSPARCE" }   -- 1%
+            }
+        }
+    })
+
+    mod.content.encounters:patch("ILEX_FOREST", {
+        grass = {
+            morn = {
+                { level = 6, species = "CATERPIE" },   -- 30%
+                { level = 6, species = "WEEDLE" },     -- 30%
+                { level = 7, species = "METAPOD" },    -- 20%
+                { level = 7, species = "KAKUNA" },     -- 10%
+                { level = 6, species = "BULBASAUR" },  -- 5%
+                { level = 6, species = "PIDGEY" },     -- 4%
+                { level = 6, species = "ZUBAT" }       -- 1%
+            }
+        }
+    })
+
+    mod.content.encounters:patch("BURNED_TOWER_B1F", {
+        grass = {
+            day = {
+                { level = 15, species = "SLUGMA" },    -- 30%
+                { level = 15, species = "KOFFING" },   -- 30%
+                { level = 16, species = "KOFFING" },   -- 20%
+                { level = 15, species = "ZUBAT" },     -- 10%
+                { level = 16, species = "ZUBAT" },     -- 5%
+                { level = 16, species = "RATTATA" },   -- 4%
+                { level = 15, species = "RATICATE" }   -- 1%
+            },
+            nite = {
+                { level = 15, species = "KOFFING" },   -- 30%
+                { level = 15, species = "KOFFING" },   -- 30%
+                { level = 16, species = "ZUBAT" },     -- 20%
+                { level = 15, species = "CHARMANDER" },-- 10%
+                { level = 16, species = "ZUBAT" },     -- 5%
+                { level = 16, species = "RATTATA" },   -- 4%
+                { level = 15, species = "RATICATE" }   -- 1%
+            }
+        }
+    })
+
+    mod.content.encounters:patch("TIN_TOWER_2F", {
+        grass = {
+            day = {
+                { level = 20, species = "RATTATA" },   -- 30%
+                { level = 20, species = "NATU" },      -- 30%
+                { level = 21, species = "XATU" },      -- 20%
+                { level = 20, species = "RATTATA" },   -- 10%
+                { level = 21, species = "RATICATE" },  -- 5%
+                { level = 21, species = "RATICATE" },  -- 4%
+                { level = 20, species = "RATICATE" }   -- 1%
+            },
+            nite = {
+                { level = 20, species = "GASTLY" },    -- 30%
+                { level = 20, species = "RATTATA" },   -- 30%
+                { level = 21, species = "XATU" },      -- 20%
+                { level = 20, species = "GASTLY" },    -- 10%
+                { level = 21, species = "RATICATE" },  -- 5%
+                { level = 21, species = "RATICATE" },  -- 4%
+                { level = 20, species = "RATICATE" }   -- 1%
+            }
+        }
+    })
+
+    mod.content.encounters:patch("UNION_CAVE_B1F", {
+        grass = {
+            morn = {
+                { level = 8, species = "ZUBAT" },      -- 30%
+                { level = 8, species = "GOLBAT" },     -- 30%
+                { level = 9, species = "ZUBAT" },      -- 20%
+                { level = 8, species = "SQUIRTLE" },   -- 10%
+                { level = 9, species = "GEODUDE" },    -- 5%
+                { level = 9, species = "ONIX" },       -- 4%
+                { level = 8, species = "ONIX" }        -- 1%
+            },
+            day = {
+                { level = 8, species = "ZUBAT" },      -- 30%
+                { level = 8, species = "GOLBAT" },     -- 30%
+                { level = 9, species = "ZUBAT" },      -- 20%
+                { level = 8, species = "SQUIRTLE" },   -- 10%
+                { level = 9, species = "GEODUDE" },    -- 5%
+                { level = 9, species = "ONIX" },       -- 4%
+                { level = 8, species = "ONIX" }        -- 1%
+            }
+        },
+        water = {
+            slots = {
+                { level = 10, species = "ZUBAT" },     -- 60%
+                { level = 15, species = "SQUIRTLE" },  -- 30%
+                { level = 20, species = "SQUIRTLE" }   -- 10%
+            }
+        }
+    })
+
+    mod.content.encounters:patch("WHIRL_ISLAND_LUGIA_CHAMBER", {
+        grass = {
+            morn = {
+                { level = 22, species = "KRABBY" },    -- 30%
+                { level = 22, species = "ZUBAT" },     -- 30%
+                { level = 23, species = "KINGLER" },   -- 20%
+                { level = 22, species = "GOLBAT" },    -- 10%
+                { level = 23, species = "OMANYTE" },   -- 5%
+                { level = 23, species = "GOLBAT" },    -- 4%
+                { level = 22, species = "SEEL" }       -- 1%
+            },
+            day = {
+                { level = 22, species = "KRABBY" },    -- 30%
+                { level = 22, species = "ZUBAT" },     -- 30%
+                { level = 23, species = "KINGLER" },   -- 20%
+                { level = 22, species = "GOLBAT" },    -- 10%
+                { level = 23, species = "OMANYTE" },   -- 5%
+                { level = 23, species = "GOLBAT" },    -- 4%
+                { level = 22, species = "SEEL" }       -- 1%
+            },
+            nite = {
+                { level = 22, species = "KRABBY" },    -- 30%
+                { level = 22, species = "ZUBAT" },     -- 30%
+                { level = 23, species = "KINGLER" },   -- 20%
+                { level = 22, species = "KABUTO" },    -- 10%
+                { level = 23, species = "SEEL" },      -- 5%
+                { level = 23, species = "GOLBAT" },    -- 4%
+                { level = 22, species = "SEEL" }       -- 1%
+            }
+        }
+    })
+
+    -- LENDÁRIOS (1%)
+    mod.content.encounters:patch("ROUTE_10_NORTH", {
+        grass = {
+            day = {
+                { level = 15, species = "VOLTORB" },   -- 30%
+                { level = 15, species = "MAGNEMITE" }, -- 30%
+                { level = 16, species = "RATICATE" },  -- 20%
+                { level = 15, species = "MAGNETON" },  -- 10%
+                { level = 16, species = "ELECTABUZZ" },-- 5%
+                { level = 16, species = "ELECTABUZZ" },-- 4%
+                { level = 40, species = "ZAPDOS" }     -- 1%
+            }
+        }
+    })
+
+    mod.content.encounters:patch("SILVER_CAVE_ROOM_2", {
+        grass = {
+            morn = {
+                { level = 45, species = "GOLBAT" },    -- 30%
+                { level = 45, species = "MACHOKE" },   -- 30%
+                { level = 46, species = "URSARING" },  -- 20%
+                { level = 45, species = "PARASECT" },  -- 10%
+                { level = 46, species = "PARASECT" },  -- 5%
+                { level = 46, species = "MISDREAVUS" },-- 4%
+                { level = 50, species = "MOLTRES" }    -- 1%
+            }
+        }
+    })
+
+    mod.content.encounters:patch("ICE_PATH_B3F", {
+        grass = {
+            nite = {
+                { level = 22, species = "ZUBAT" },     -- 30%
+                { level = 22, species = "JYNX" },      -- 30%
+                { level = 23, species = "GOLBAT" },    -- 20%
+                { level = 22, species = "SWINUB" },    -- 10%
+                { level = 23, species = "DELIBIRD" },  -- 5%
+                { level = 23, species = "SNEASEL" },   -- 4%
+                { level = 40, species = "ARTICUNO" }   -- 1%
+            }
+        }
+    })
+
+    mod.content.encounters:patch("SEAFOAM_GYM", {
+        grass = {
+            nite = {
+                { level = 45, species = "ZUBAT" },     -- 30%
+                { level = 45, species = "GOLBAT" },    -- 30%
+                { level = 46, species = "KRABBY" },    -- 20%
+                { level = 45, species = "KINGLER" },   -- 10%
+                { level = 46, species = "GOLDUCK" },   -- 5%
+                { level = 46, species = "GOLBAT" },    -- 4%
+                { level = 60, species = "MEWTWO" }     -- 1%
+            }
+        }
+    })
+
+    mod.content.encounters:patch("SILVER_CAVE_ROOM_3", {
+        grass = {
+            morn = {
+                { level = 45, species = "GOLBAT" },    -- 30%
+                { level = 45, species = "ONIX" },      -- 30%
+                { level = 46, species = "GRAVELER" },  -- 20%
+                { level = 45, species = "URSARING" },  -- 10%
+                { level = 46, species = "DONPHAN" },   -- 5%
+                { level = 46, species = "LARVITAR" },  -- 4%
+                { level = 50, species = "MEW" }        -- 1%
+            }
+        }
+    })
 
     ---------------------------------------------------------
     -- 3. WATER ENCOUNTERS (SURFING)
     ---------------------------------------------------------
-    -- Each water route must have exactly 3 slots: 60%, 30%, 10%
-    local water_encounters = {
-        ["ROUTE_41"] = {
-            -- Remoraid 30%
-            { chance = 60, species = "TENTACOOL" },
-            { chance = 30, species = "REMORAID" },
-            { chance = 10, species = "MANTINE" }
-        },
-        ["UNION_CAVE_B1F"] = {
-            -- Squirtle 40% (30% + 10% slots)
-            { chance = 60, species = "ZUBAT" },
-            { chance = 30, species = "SQUIRTLE" },
-            { chance = 10, species = "SQUIRTLE" }
+    -- Gen 2 uses exactly 3 slots for water encounters (60%, 30%, 10%)
+    mod.content.encounters:patch("ROUTE_41", {
+        water = {
+            slots = {
+                { level = 20, species = "TENTACOOL" }, -- 60%
+                { level = 20, species = "REMORAID" },  -- 30%
+                { level = 20, species = "MANTINE" }    -- 10%
+            }
         }
-    }
+    })
 
-    Mod.hook("GetWaterEncounters", function(map_id, original_table)
-        if water_encounters[map_id] then
-            return water_encounters[map_id]
-        end
-        return original_table
-    end)
 end
-
--- Registers the Mod lifecycle in the Recomp engine
-Mod.register(Crystal251)
