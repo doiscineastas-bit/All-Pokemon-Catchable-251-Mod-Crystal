@@ -1,9 +1,9 @@
 {
     "id": "crystal-251-catchable",
     "name": "All Pokemon Catchable 251",
-    "author": "celotooty",
     "version": "1.0.0",
-    "description": "Makes all 251 Pokemon obtainable in Crystal without trading.",
+    "author": "celotooty",
+    "description": "Permite capturar os 251 Pokémon na versão Crystal original, sem trocas. Inclui encontros diurnos/noturnos e evoluções por pedra.",
     "api_version": 2,
     "target_games": ["crystal"]
 }
