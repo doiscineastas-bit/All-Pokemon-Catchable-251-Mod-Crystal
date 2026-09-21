@@ -1,6 +1,6 @@
 return function(mod)
     -- Assinatura do Diretor / Produtor Cultural
-    mod.log:info("Loading All Pokemon Catchable 251 (Crystal) by Marcelo Tooty...")
+    mod.log:info("Loading All Pokemon Catchable 251 (Crystal) by celotooty...")
 
     ---------------------------------------------------------
     -- 1. TRADE EVOLUTIONS (Pedras em vez de Troca)
