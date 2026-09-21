@@ -2,7 +2,14 @@
 
 A Lua mod for the **Gen1Recomp** engine that makes all 251 Pokémon naturally obtainable in a single playthrough of **Pokémon Crystal**. 
 
-Inspired by the engine implementation of [wowabox's APC 151 Mod](https://github.com/wowabox/All_Pokemon_Catchable_151_Mod) and the encounter/evolution design from [Pokémon Perfect Crystal (2020 Update)](https://www.romhacking.net/reviews/9531/) by aleckermit, this mod uses the Gen1Recomp Mod API to dynamically inject wild encounters and evolution data into the game memory. **Your vanilla ROM and `.sav` files are never altered.**
+This project was built upon and inspired by the incredible work of the Pokémon reverse-engineering and modding community. Special thanks to:
+
+*   **[wowabox's APC 151 Mod](https://github.com/wowabox/All_Pokemon_Catchable_151_Mod):** For the initial inspiration on using the Gen1Recomp Lua API for catchable mods.
+*   **[aleckermit's Pokémon Perfect Crystal](https://www.romhacking.net/reviews/9531/):** For the excellent encounter and evolution design used as the foundation for the 251 distribution.
+*   **[weskestis' Universal Randomizer](https://github.com/weskestis/UniversalRandomizer):** For the brilliant `Runtime Hooks` technique (`encounter.species`) that allowed us to intercept and dynamically inject wild encounters.
+*   **[pret/pokecrystal](https://github.com/pret/pokecrystal):** The legendary Pokémon Crystal disassembly, providing the internal structures, 7-slot encounter percentages, and native syntax required for this mod.
+
+This mod uses the Gen1Recomp Mod API to dynamically inject wild encounters and evolution data into the game memory. **Your vanilla ROM and `.sav` files are never altered.**
 
 ---
 
@@ -77,5 +84,5 @@ The legendary birds, Mewtwo, and Mew have been carefully hidden across Kanto and
 | **Articuno** | Ice Path B3F | Night |
 | **Zapdos** | Route 10 North (Outside Power Plant) | Day |
 | **Moltres** | Mt. Silver (Room 2) | Morning |
-| **Mewtwo** | Seafoam Gym (Hiding with Blaine) | Night |
-| **Mew** | Mt. Silver Summit (With Red) | Morning |
+| **Mew** | Mt. Silver Summit (With Red) | Morning / Day |
+| **Mewtwo** | Mt. Silver Summit (With Red) | Night |
