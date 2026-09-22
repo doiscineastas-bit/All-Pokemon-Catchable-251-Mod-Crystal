@@ -1,5 +1,5 @@
 return function(mod)
-    mod.log:info("Loading All Pokemon Catchable 251 (Crystal) - Untamed Tohjo Sync...")
+    mod.log:info("Loading All Pokemon Catchable 251 (Crystal) - Living Dex Edition...")
 
     ---------------------------------------------------------
     -- 1. TRADE EVOLUTIONS (Pedras em vez de Troca)
@@ -16,11 +16,9 @@ return function(mod)
     mod.content.pokemon:patch("PORYGON",   { evolutions = { { method = "EVOLVE_ITEM", item = "THUNDERSTONE",into = "PORYGON2" } } })
 
     ---------------------------------------------------------
-    -- 2. BANCO DE DADOS DOS MATINHOS (O Array Esparso)
+    -- 2. BANCO DE DADOS DOS MATINHOS
     ---------------------------------------------------------
     local matinhos = {
-        
-        -- STARTERS E FÓSSEIS
         ROUTE_31 = { grass = { morn = { [4] = { level = 5, species = "CHIKORITA" } } } },
         DARK_CAVE_VIOLET_ENTRANCE = {
             grass = { nite = { [1] = { level = 5, species = "CYNDAQUIL" }, [4] = { level = 5, species = "CYNDAQUIL" } } }
@@ -56,8 +54,6 @@ return function(mod)
                 nite = { [4] = { level = 25, species = "KABUTO" } }
             }
         },
-
-        -- ENCONTROS GERAIS EXCLUSIVOS
         ROUTE_36 = {
             grass = {
                 morn = { [1] = { level = 13, species = "VULPIX" } },
@@ -105,8 +101,6 @@ return function(mod)
                 nite = { [2] = { level = 20, species = "REMORAID" } }
             }
         },
-
-        -- LENDÁRIOS SECRETOS
         ICE_PATH_B3F = { grass = { nite = { [7] = { level = 50, species = "ARTICUNO" } } } },
         ROUTE_10_NORTH = { grass = { day = { [7] = { level = 50, species = "ZAPDOS" } } } },
         SILVER_CAVE_ROOM_2 = { grass = { morn = { [7] = { level = 50, species = "MOLTRES" } } } },
@@ -123,7 +117,7 @@ return function(mod)
     -- 3. INTEGRAÇÃO COMPLETA NATIVA (Compatível com Untamed Tohjo)
     ---------------------------------------------------------
     
-    -- A) Injeta as nossas modificações cirurgicamente na memória base do jogo
+    -- Injeta nossos Pokémons cirurgicamente na memória base do jogo
     mod.events:on("game.ready", function(ev)
         local game = ev and ev.game or mod.game
         if not game or not game.data then return end
@@ -136,11 +130,13 @@ return function(mod)
                 local mapEnc = gen2[terrain] and gen2[terrain][mapId]
                 if mapEnc and type(mapEnc.slots) == "table" then
                     for tod, slots in pairs(tods) do
-                        local targetSlots = (terrain == "water") and mapEnc.slots or mapEnc.slots[tod]
+                        
+                        -- A SOLUÇÃO: Converte "day" para "DAY" para combinar com a tabela da Engine!
+                        local timeKey = string.upper(tod)
+                        
+                        local targetSlots = (terrain == "water") and mapEnc.slots or mapEnc.slots[timeKey]
                         if type(targetSlots) == "table" then
                             for slot_idx, novo_bicho in pairs(slots) do
-                                -- Altera apenas o slot específico, mantendo o resto da tabela Vanilla intacta!
-                                -- Isso resolve o problema de leitura (ipairs) do Untamed Tohjo.
                                 if targetSlots[slot_idx] then
                                     targetSlots[slot_idx].species = novo_bicho.species
                                     targetSlots[slot_idx].level = novo_bicho.level
@@ -158,13 +154,11 @@ return function(mod)
         end
     end)
 
-    -- B) Hook de encontros padrão (Evita sobrescrever batalhas de toque do Untamed Tohjo)
+    -- Fallback: garante o funcionamento na grama se outros mods alterarem a memória
     mod.hooks:wrap("encounter.species", function(nextFn, enc, ctx)
         enc = nextFn(enc, ctx)
         if not enc or not enc.species then return enc end
-
-        -- TRAVA DE SEGURANÇA: Se não há slot rolado, é uma batalha forçada do overworld!
-        if not enc.slot then return enc end
+        if not enc.slot then return enc end -- Evita conflito com o "tocar no sprite" do Untamed Tohjo
 
         local mapId = tostring(ctx and ctx.mapId or "")
         local terrain = tostring(ctx and ctx.terrain or "grass")
